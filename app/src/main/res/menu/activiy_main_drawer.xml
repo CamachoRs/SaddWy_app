@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item android:id="@+id/nav_item_Home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/baseline_home_24"
+            android:title="Inicio"/>
+        <item android:id="@+id/nav_item_Manual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/baseline_book_24"
+            android:title="Manual de Usuario"/>
+        <item android:id="@+id/nav_item_Perfil"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/baseline_person_24"
+            android:title="Perfil"/>
+        <item android:id="@+id/nav_item_Ranking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/baseline_hourglass_bottom_24"
+            android:title="Ranking"/>
+        <item
+            android:id="@+id/nav_item_Session"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/baseline_logout_24"
+            android:title="Cerrar Session" />
+    </group>
+</menu>

@@ -1,0 +1,21 @@
+<!-- button_with_border_shadow.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo del botón con sombreado -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#80000000" /> <!-- Color del sombreado -->
+            <corners android:radius="8dp" /> <!-- Radio de las esquinas -->
+        </shape>
+    </item>
+    <!-- Borde del botón -->
+    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" /> <!-- Color de fondo transparente -->
+            <stroke
+                android:width="2dp"
+            android:color="#000000" /> <!-- Color del borde (negro en este caso) -->
+            <corners android:radius="8dp" /> <!-- Radio de las esquinas -->
+        </shape>
+    </item>
+</layer-list>
+
