@@ -45,6 +45,15 @@ dependencies {
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     //para consumir imagenes en un Json
     implementation ("com.github.bumptech.glide:glide:4.11.0")
+    // Para consumir animaciones en letties
+    implementation("com.airbnb.android:lottie:6.0.0")
+    //libreria de QR
+    implementation("com.google.zxing:core:3.4.1")
+//peticion para editar usuario
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    implementation("androidx.activity:activity:1.8.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.11.0")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

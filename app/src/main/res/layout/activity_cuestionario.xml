@@ -8,14 +8,15 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/titulo_card"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
 
-        android:text="Java 1"
-        android:textSize="24sp" />
+        android:text="JavaScript"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout"

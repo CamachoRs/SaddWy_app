@@ -1,25 +1,101 @@
 package com.example.saddwy
 
+import Config.Config
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.viewpager.widget.ViewPager
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class Cuestionario : AppCompatActivity() {
+    lateinit var Token:String
+    lateinit var Titulo:TextView
+    private var id_usuario:Int = 0
+    private var id_pregunta:Int = 1
+    private lateinit var prefs: SharedPreferences
+    val fragmento = Explicacion_Fragment()
+    var args=Bundle()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cuestionario)
 
 
-        var viewPager: ViewPager = findViewById(R.id.viewPager) as ViewPager
-        var tableyout: TabLayout = findViewById(R.id.tablayout) as TabLayout
+        Titulo =findViewById(R.id.titulo_card)
 
-        val fragmentAdapter = FragmentAdapter(supportFragmentManager)
-        fragmentAdapter.addFragment(Explicacion_Fragment(), "Explicacion")
-        fragmentAdapter.addFragment(Pregunta_Fragment(), "Pregunta")
 
-        viewPager.adapter = fragmentAdapter
-        tableyout.setupWithViewPager(viewPager)
+        // Recuperar el nivel_id del Intent
+        id_usuario  = intent.getIntExtra("nivel_id", -1)
+        id_pregunta = intent.getIntExtra("id_pregunta",-1)
+
+
+        prefs = this.
+        getSharedPreferences("sesion", Context.MODE_PRIVATE)
+        Token =  prefs.getString("token","").toString()
+        //llamo a la funcion Buscar
+        BuscarCuestionario()
+    }
+
+    fun BuscarCuestionario(){
+        GlobalScope.launch {
+            try {
+                peticionCuestionario()
+            }catch (error: Exception){
+
+            }
+        }
+    }
+    suspend fun peticionCuestionario() {
+        val queue = Volley.newRequestQueue(this)
+        val request = object: JsonObjectRequest(
+            Method.GET, "${Config().urlBase}questions/${id_usuario}", null,
+            { response ->
+                var dato = response.getJSONArray("dato")
+                val explanation = dato.getString(id_pregunta)
+                val args = Bundle()
+
+
+
+
+                args.putString("explanation", explanation)
+                args.putInt("id_pregunta",id_pregunta)
+
+
+                // Crear instancias de tus fragmentos y pasarles los argumentos
+                var fragmentoExplicacion = Explicacion_Fragment()
+                fragmentoExplicacion.arguments = args
+
+                val fragmentoPregunta = Pregunta_Fragment()
+                fragmentoPregunta.arguments = args
+
+                var viewPager: ViewPager = findViewById(R.id.viewPager) as ViewPager
+                var tableyout: TabLayout = findViewById(R.id.tablayout) as TabLayout
+
+                val fragmentAdapter = FragmentAdapter(supportFragmentManager)
+                fragmentAdapter.addFragment(fragmentoExplicacion, "Explicacion")
+                fragmentAdapter.addFragment(fragmentoPregunta, "Pregunta")
+
+                viewPager.adapter = fragmentAdapter
+                tableyout.setupWithViewPager(viewPager)
+            },
+            { error ->
+                println(error)
+            }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = "Token ${Token}"
+                return headers
+            }
+        }
+        queue.add(request)
     }
 }

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ElevatedViewStyle">
+        <item name="android:elevation">20dp</item> <!-- Ajusta la elevación según tus necesidades -->
+        <item name="android:background">@drawable/border_ranking</item> <!-- Fondo con sombreado -->
+    </style>
+</resources>

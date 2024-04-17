@@ -24,7 +24,7 @@
             android:paddingLeft="30dp">
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/imagen_card"
                 android:layout_width="300dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="70dp"
@@ -40,13 +40,14 @@
                 android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/TextUsuario"
+                android:id="@+id/TextCorreo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:ems="10"
                 android:inputType="text"
-                android:shadowRadius="30" />
+                android:background="@drawable/edittext_selector"
+                 />
 
             <TextView
                 android:id="@+id/textView3"
@@ -62,7 +63,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:ems="10"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:background="@drawable/edittext_selector"/>
 
             <CheckBox
                 android:id="@+id/checkBoxMostrarContrasena"
@@ -75,8 +77,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:text="Iniciar Sesion" />
+
+            <TextView
+                android:id="@+id/linkTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:layout_marginBottom="10dp"
+                android:autoLink="web"
+                android:clickable="true"
+                android:onClick="openRegistrar"
+                android:text="Registrar Usuario" />
+
+
+            <TextView
+                android:id="@+id/linkTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="60dp"
+                android:autoLink="web"
+                android:clickable="true"
+                android:onClick="openWebUrl"
+                android:text="Recuperar Cuenta" />
+
 
         </LinearLayout>
 

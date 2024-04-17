@@ -12,9 +12,9 @@
     >
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imagen_card"
         android:layout_width="350dp"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:paddingRight="150dp"
-        app:srcCompat="@drawable/whatsapp_image_2024_02_20_at_7_35_04_pm" />
+        app:srcCompat="@drawable/logo_saddwy_black" />
 </LinearLayout>
