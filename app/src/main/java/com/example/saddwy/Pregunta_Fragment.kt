@@ -1,6 +1,9 @@
 package com.example.saddwy
 
+import Config.Config
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +15,13 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 // TODO: Rename parameter arguments, choose names that match
@@ -19,12 +29,16 @@ import org.json.JSONObject
 
 
 class Pregunta_Fragment : Fragment() {
-
+    lateinit var Token:String
+    private lateinit var prefs: SharedPreferences
     lateinit var Pregunta:TextView
     lateinit var btn_pregunta1:Button
     lateinit var btn_pregunta2:Button
     lateinit var btn_pregunta3:Button
     lateinit var Continuar:Button
+    var id_mivel:Int = 0
+    var Nintentos:Int = 0
+    var id_preg:Int = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,12 +60,27 @@ class Pregunta_Fragment : Fragment() {
 
         Continuar.isEnabled = false
 
-        val explanation = arguments?.getString("explanation").toString()
-        val id:Int = arguments?.getInt("id_pregunta",0)?:0
-        val sumar = id+1
-        val json = explanation
+        //llamar al token
+        prefs = requireActivity().
+        getSharedPreferences("sesion", Context.MODE_PRIVATE)
+        Token =  prefs.getString("token","").toString()
+
+
 
         try {
+
+            val explanation = arguments?.getString("explanation").toString()
+            //trae id_pregunta
+            val id_nivel:Int = arguments?.getInt("nivel_id",0)?:0
+            id_mivel = id_nivel
+
+            val id:Int = arguments?.getInt("id_pregunta",0)?:0
+             id_preg = id+1
+            //traer id Intento
+            val Intento:Int = arguments?.getInt("Intento",0)?:0
+             Nintentos = Intento
+            val json = explanation
+            //
             val obj = JSONObject(json)
             val texto_button = obj.getJSONObject("respuesta")
             Pregunta.text = obj.getString("pregunta")
@@ -62,13 +91,42 @@ class Pregunta_Fragment : Fragment() {
                     Continuar.isEnabled = true
 
                     Continuar.setOnClickListener {
-                        val  intel= Intent(activity,Cuestionario::class.java)
-                       intel.putExtra("id_pregunta", sumar)
-                        startActivity(intel)
-                        activity?.finish()
+
+                        if (id_preg==5){
+
+                            GlobalScope.launch {
+                                try {
+                                    Cuestion()
+                                }catch (error: Exception){
+
+                                }
+                            }
+
+                            val builder = AlertDialog.Builder(requireContext())
+                            builder.setTitle("Error")
+                            builder.setMessage("Felicitaciones por terminar el nivel")
+                            builder.setPositiveButton("Aceptar"){dialog,which ->
+                                val intel = Intent(activity,Principal::class.java)
+                                startActivity(intel)
+                                activity?.finish()
+                            }
+                            val dialog: AlertDialog = builder.create()
+                            dialog.show()
+
+
+                        }else{
+                            val  intel= Intent(activity,Cuestionario::class.java)
+                            intel.putExtra("id_pregunta", id_preg)
+                            intel.putExtra("nivel_id",id_nivel)
+                            intel.putExtra("Intento",Nintentos)
+                            startActivity(intel)
+                            activity?.finish()
+                        }
+
                     }
                 }else{
                     btn_pregunta1.setBackgroundColor(Color.parseColor("#FF0000"))
+                    Nintentos+1
                 }
             }
             btn_pregunta2.text = texto_button.getString("2")
@@ -78,6 +136,7 @@ class Pregunta_Fragment : Fragment() {
                     Continuar.isEnabled = true
                 }else{
                     btn_pregunta2.setBackgroundColor(Color.parseColor("#FF0000"))
+                    Nintentos+1
                 }
             }
             btn_pregunta3.text = texto_button.getString("3")
@@ -88,6 +147,7 @@ class Pregunta_Fragment : Fragment() {
                     Continuar.isEnabled = true
                 }else{
                     btn_pregunta3.setBackgroundColor(Color.parseColor("#FF0000"))
+                    Nintentos+1
                 }
 
 
@@ -96,11 +156,40 @@ class Pregunta_Fragment : Fragment() {
             }
             Log.d("My App", obj.toString())
         } catch (t: Throwable) {
-            Log.e("My App", "Could not parse malformed JSON: \"$json\"", t)
+            Log.e("My App", "Could not parse malformed JSON: ")
         }
 
-        val progressBar = view.findViewById<ProgressBar>(R.id.progress_Explicacion)
-        // Establece el valor de progreso
-        progressBar.progress = 10 // Por ejemplo, establece el progreso en 50
+    }
+
+    suspend fun Cuestion() {
+        val url = Config().urlBase + "questions/${id_mivel}/"
+        val queue = Volley.newRequestQueue(activity)
+        val parametros = JSONObject()
+        parametros.put("intentos", Nintentos)
+        val stringRequest = object : JsonObjectRequest(
+            Method.POST,
+            url,
+            null,
+            { response ->
+
+            },
+            { error ->
+                Toast.makeText(activity,"Error en el servidor {$error}",
+                    Toast.LENGTH_LONG).show()
+
+            }
+        ) {
+            // Se agregan los encabezados de la solicitud, incluyendo el token JWT si está disponible
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                // Agregar el token JWT si está disponible
+                if (Token.isNotEmpty()) {
+                    headers["Authorization"] = "Token ${Token}"
+                }
+                return headers
+            }
+        }
+
+        queue.add(stringRequest)
     }
 }

@@ -20,10 +20,10 @@ class Cuestionario : AppCompatActivity() {
     lateinit var Token:String
     lateinit var Titulo:TextView
     private var id_usuario:Int = 0
-    private var id_pregunta:Int = 1
+    private var id_pregunta:Int = 0
+    var Intento:Int = 0
     private lateinit var prefs: SharedPreferences
-    val fragmento = Explicacion_Fragment()
-    var args=Bundle()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cuestionario)
@@ -34,24 +34,27 @@ class Cuestionario : AppCompatActivity() {
 
         // Recuperar el nivel_id del Intent
         id_usuario  = intent.getIntExtra("nivel_id", -1)
-        id_pregunta = intent.getIntExtra("id_pregunta",-1)
-
+        id_pregunta = intent.getIntExtra("id_pregunta",1)
+        Intento = intent.getIntExtra("Intento",0)
 
         prefs = this.
         getSharedPreferences("sesion", Context.MODE_PRIVATE)
         Token =  prefs.getString("token","").toString()
         //llamo a la funcion Buscar
-        BuscarCuestionario()
+
+        GlobalScope.launch {
+                try {
+                    peticionCuestionario()
+                }catch (error: Exception){
+
+                }
+            }
     }
 
-    fun BuscarCuestionario(){
-        GlobalScope.launch {
-            try {
-                peticionCuestionario()
-            }catch (error: Exception){
 
-            }
-        }
+
+    fun BuscarCuestionario(){
+
     }
     suspend fun peticionCuestionario() {
         val queue = Volley.newRequestQueue(this)
@@ -62,11 +65,10 @@ class Cuestionario : AppCompatActivity() {
                 val explanation = dato.getString(id_pregunta)
                 val args = Bundle()
 
-
-
-
                 args.putString("explanation", explanation)
                 args.putInt("id_pregunta",id_pregunta)
+                args.putInt("nivel_id",id_usuario)
+                args.putInt("Intento",Intento)
 
 
                 // Crear instancias de tus fragmentos y pasarles los argumentos
