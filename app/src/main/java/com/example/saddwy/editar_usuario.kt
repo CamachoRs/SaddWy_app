@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.database.Cursor
-import android.media.audiofx.DynamicsProcessing.Config
+import Config.Config
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -47,7 +47,6 @@ class editar_usuario : Fragment() {
     private var param1:String? = null
     private var param2:String? = null
     private lateinit var foto: ImageView
-    private lateinit var urlFoto:String
     private var uriFoto: Uri? = null
     private lateinit var nombre:String
     private lateinit var correo:String
@@ -60,7 +59,8 @@ class editar_usuario : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
-
+            nombre = it.getString("nombre").toString()
+            correo = it.getString("correo").toString()
         }
     }
 
@@ -69,9 +69,8 @@ class editar_usuario : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         var view = inflater.inflate(R.layout.fragment_editar_usuario, container, false)
+
         //traer token
-        nombre = ""
-        urlFoto = ""
         prefs = requireActivity().
         getSharedPreferences("sesion", Context.MODE_PRIVATE)
         Token =  prefs.getString("token","").toString()
@@ -83,11 +82,6 @@ class editar_usuario : Fragment() {
             val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
             startActivityForResult(gallery, PICK_IMAGE)
         }
-
-        view.findViewById<EditText>(R.id.txtNombreActualizar).setText(nombre)
-        Glide.with(this)
-            .load(urlFoto)
-            .into(foto)
 
         view.findViewById<Button>(R.id.btnActualizarActualizar).setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
@@ -109,7 +103,6 @@ class editar_usuario : Fragment() {
                 }
             }
         }
-
         return view
     }
 
@@ -137,6 +130,15 @@ class editar_usuario : Fragment() {
         var validarNombre = ""
         var validarPassword = ""
 
+        if (nombre.isEmpty() && password.isEmpty() && confirmarPassword.isEmpty()) {
+            AlertDialog.Builder(requireContext())
+                .setTitle("Error")
+                .setMessage("No se han realizado cambios. Todos los campos están vacíos.")
+                .setPositiveButton("Aceptar", null)
+                .show()
+            return
+        }
+
         val cliente = OkHttpClient()
         val datos = MultipartBody.Builder().setType(MultipartBody.FORM)
         if (uriFoto != null) {
@@ -149,12 +151,12 @@ class editar_usuario : Fragment() {
             if (validarNombre.length == 0) {
                 datos.addFormDataPart("nombre", nombre)
             } else {
-                val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Error")
-                builder.setPositiveButton("Aceptar",null)
-                builder.setMessage(validarNombre)
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Error")
+                    .setMessage(validarNombre)
+                    .setPositiveButton("Aceptar", null)
+                    .show()
+                return
             }
         }
 
@@ -163,18 +165,18 @@ class editar_usuario : Fragment() {
             if (validarPassword.length == 0) {
                 datos.addFormDataPart("password", password)
             } else {
-                val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Error")
-                builder.setPositiveButton("Aceptar",null)
-                builder.setMessage(validarPassword)
-                val dialog: AlertDialog = builder.create()
-                dialog.show()
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Error")
+                    .setMessage(validarPassword)
+                    .setPositiveButton("Aceptar", null)
+                    .show()
+                return
             }
         }
 
         val requestBody = datos.build()
         val request = Request.Builder()
-            .url("http://192.168.147.187:8000/api/v01/edit/")
+            .url("${Config().urlBase}edit/")
             .addHeader("Authorization", "Token ${Token}")
             .put(requestBody)
             .build()
@@ -186,12 +188,14 @@ class editar_usuario : Fragment() {
 
             override fun onResponse(call: okhttp3.Call, response: Response) {
                 if (response.code == 200) {
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("¡Actualización completa!")
-                    builder.setPositiveButton("Aceptar",null)
-                    builder.setMessage("¡Información actualizada exitosamente!")
-                    val dialog: AlertDialog = builder.create()
-                    dialog.show()
+                    (requireActivity() as Activity).runOnUiThread {
+                        val builder = AlertDialog.Builder(requireContext())
+                        builder.setTitle("¡Actualización completa!")
+                        builder.setMessage("¡Información actualizada exitosamente!")
+                        builder.setPositiveButton("Aceptar", null)
+                        val dialog: AlertDialog = builder.create()
+                        dialog.show()
+                    }
                 }
             }
         })
@@ -210,12 +214,11 @@ class editar_usuario : Fragment() {
                         .error(R.drawable.icono_saddwy)
                         .into(foto)
                 } else {
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Error")
-                    builder.setMessage("Por favor, asegúrate de cargar una imagen en formato JPG o PNG para completar el proceso")
-                    builder.setPositiveButton("Aceptar",null)
-                    val dialog: AlertDialog = builder.create()
-                    dialog.show()
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Error")
+                        .setMessage("Por favor, asegúrate de cargar una imagen en formato JPG o PNG para completar el proceso")
+                        .setPositiveButton("Aceptar", null)
+                        .show()
                     return
                 }
             }
@@ -272,6 +275,11 @@ class editar_usuario : Fragment() {
         return similitud.toDouble() / maxLength
     }
 
+    fun contieneCaracterEspecial(password: String): Boolean {
+        val caracteresEspeciales = "~`!@#$%^&*()-_+={}[]|;:'\",.<>?/"
+        return password.any { caracteresEspeciales.contains(it) }
+    }
+
     fun validarNombre(nombre:String):String {
         if (nombre.length < 10 || nombre.length > 30) {
             return "Por favor, ingrese un nombre válido con longitud de 10 a 30 caracteres"
@@ -292,6 +300,8 @@ class editar_usuario : Fragment() {
             return "Por favor, asegúrate de incluir al menos una letra minúscula en tu contraseña"
         } else if (!contieneNumeros(password)) {
             return "Por favor, asegúrate de incluir al menos un número en tu contraseña"
+        } else if (!contieneCaracterEspecial(password)) {
+            return "Por favor, asegúrate de incluir al menos un carácter especial en tu contraseña"
         } else if (calcularSimilitud(nombre, password) > 0.5 && calcularSimilitud(correo, password) > 0.5) {
             return "Por favor, elige una contraseña que no contenga información personal"
         }

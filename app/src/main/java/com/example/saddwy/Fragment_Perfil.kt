@@ -135,21 +135,21 @@ class Fragment_Perfil : Fragment() {
 
         prefs = requireActivity().getSharedPreferences("sesion", Context.MODE_PRIVATE)
         Config.prefs = prefs
-
         Token =  prefs.getString("token","").toString()
+
         //ir a a la vista actualizar
-
         view.findViewById<ImageButton>(R.id.btn_Actualizar).setOnClickListener {
-
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
             var fragment = editar_usuario()
+            val args = Bundle()
+            args.putString("nombre", TextUsuario.text.toString())
+            args.putString("correo", TextCorreo.text.toString())
+            fragment.arguments = args
             transaction.replace(R.id.fragment_layout_main, fragment)
             transaction.addToBackStack(null)
             transaction.commit()
-            //Obtener el token guardado*/
-
-
         }
+        //Obtener el token guardado
         Token = prefs.getString("token", "").toString()
     }
 

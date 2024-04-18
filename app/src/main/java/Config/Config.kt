@@ -14,11 +14,7 @@ import java.util.Timer
 import java.util.TimerTask
 
 class Config {
-<<<<<<< HEAD
-    var urlBase = "http://192.168.20.59:8000/api/v01/"
-=======
     var urlBase = "http://192.168.137.1:8000/api/v01/"
->>>>>>> 18ac9857c9b0551ab74cc8055d1b15c20590eb25
 
     private val timer = Timer()
     private var primeroInicio = true
@@ -77,5 +73,4 @@ class Config {
         )
         queue.add(request)
     }
-
 }
