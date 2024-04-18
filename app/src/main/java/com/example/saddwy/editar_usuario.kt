@@ -60,9 +60,7 @@ class editar_usuario : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
-            urlFoto = it.getString("foto").toString()
-            nombre = it.getString("nombre").toString()
-            correo = it.getString("correo").toString()
+
         }
     }
 
@@ -72,6 +70,8 @@ class editar_usuario : Fragment() {
     ): View? {
         var view = inflater.inflate(R.layout.fragment_editar_usuario, container, false)
         //traer token
+        nombre = ""
+        urlFoto = ""
         prefs = requireActivity().
         getSharedPreferences("sesion", Context.MODE_PRIVATE)
         Token =  prefs.getString("token","").toString()
@@ -92,6 +92,7 @@ class editar_usuario : Fragment() {
         view.findViewById<Button>(R.id.btnActualizarActualizar).setOnClickListener {
             GlobalScope.launch(Dispatchers.Main) {
                 try {
+                    // Código que puede lanzar una excepción
                     peticionActualizar(
                         requireContext(),
                         view.findViewById<EditText>(R.id.txtNombreActualizar).text.toString(),
@@ -99,10 +100,16 @@ class editar_usuario : Fragment() {
                         view.findViewById<EditText>(R.id.txtConfirmarPasswordActualizar).text.toString()
                     )
                 } catch (error: Exception) {
-                    println(error)
+                    // Manejar la excepción adecuadamente, por ejemplo, mostrar un mensaje de error
+                    AlertDialog.Builder(requireContext())
+                        .setTitle("Error")
+                        .setMessage("Ocurrió un error: ${error.message}")
+                        .setPositiveButton("Aceptar", null)
+                        .show()
                 }
             }
         }
+
         return view
     }
 

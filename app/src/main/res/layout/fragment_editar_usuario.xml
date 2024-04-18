@@ -11,7 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:foregroundGravity="center"
-        app:cardCornerRadius="40dp">
+        app:cardCornerRadius="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,16 +33,6 @@
                 tools:layout_editor_absoluteX="94dp"
                 tools:layout_editor_absoluteY="61dp" />
 
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(No todos los campos son obligatorios)"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="64dp"
-                tools:layout_editor_absoluteY="109dp" />
-
 
             <TextView
                 android:id="@+id/textView10"
@@ -53,8 +47,9 @@
             <ImageView
                 android:id="@+id/imgUsuarioActualizar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp" />
+                android:layout_height="100dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/icono_saddwy" />
 
             <TextView
                 android:id="@+id/text_explicacion"
