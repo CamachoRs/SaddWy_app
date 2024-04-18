@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.TextView
 import org.json.JSONObject
 
@@ -29,8 +28,6 @@ class Explicacion_Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Obtén una referencia al ProgressBar
-        val progressBar = view.findViewById<ProgressBar>(R.id.progress_Explicacion)
         val explanation = arguments?.getString("explanation")
         val textExplicacion = view.findViewById<TextView>(R.id.text_explicacion)
 
@@ -43,8 +40,5 @@ class Explicacion_Fragment : Fragment() {
         } catch (t: Throwable) {
             Log.e("My App", "Could not parse malformed JSON: \"$json\"", t)
         }
-
-        // Establece el valor de progreso
-        progressBar.progress = 10 // Por ejemplo, establece el progreso en 50
     }
 }

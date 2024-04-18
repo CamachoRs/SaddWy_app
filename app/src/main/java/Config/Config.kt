@@ -14,7 +14,7 @@ import java.util.Timer
 import java.util.TimerTask
 
 class Config {
-    var urlBase = "http://192.168.147.187:8000/api/v01/"
+    var urlBase = "http://192.168.137.1:8000/api/v01/"
 
     private val timer = Timer()
     private var primeroInicio = true
