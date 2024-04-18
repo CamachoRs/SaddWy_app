@@ -5,13 +5,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.viewpager.widget.ViewPager
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -28,34 +25,25 @@ class Cuestionario : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cuestionario)
 
-
-        Titulo =findViewById(R.id.titulo_card)
-
+        Titulo = findViewById(R.id.titulo_card)
 
         // Recuperar el nivel_id del Intent
         id_usuario  = intent.getIntExtra("nivel_id", -1)
         id_pregunta = intent.getIntExtra("id_pregunta",1)
         Intento = intent.getIntExtra("Intento",0)
 
-        prefs = this.
-        getSharedPreferences("sesion", Context.MODE_PRIVATE)
+        prefs = this.getSharedPreferences("sesion", Context.MODE_PRIVATE)
         Token =  prefs.getString("token","").toString()
-        //llamo a la funcion Buscar
 
         GlobalScope.launch {
                 try {
                     peticionCuestionario()
                 }catch (error: Exception){
-
+                    println(error)
                 }
             }
     }
 
-
-
-    fun BuscarCuestionario(){
-
-    }
     suspend fun peticionCuestionario() {
         val queue = Volley.newRequestQueue(this)
         val request = object: JsonObjectRequest(
@@ -65,11 +53,16 @@ class Cuestionario : AppCompatActivity() {
                 val explanation = dato.getString(id_pregunta)
                 val args = Bundle()
 
+                val nivelSeleccionado = dato.getJSONObject(id_pregunta)
+                val nivel = nivelSeleccionado.getJSONObject("nivel")
+                val nombreNivel = nivel.getString("nombre")
+                val detalleNivel = nivel.getString("detalle")
+                Titulo.setText("${nombreNivel} - ${detalleNivel}")
+
                 args.putString("explanation", explanation)
                 args.putInt("id_pregunta",id_pregunta)
                 args.putInt("nivel_id",id_usuario)
                 args.putInt("Intento",Intento)
-
 
                 // Crear instancias de tus fragmentos y pasarles los argumentos
                 var fragmentoExplicacion = Explicacion_Fragment()
