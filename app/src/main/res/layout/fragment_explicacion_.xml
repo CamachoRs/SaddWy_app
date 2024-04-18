@@ -13,9 +13,7 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -24,10 +22,22 @@
                 android:layout_marginRight="10dp"
                 android:orientation="vertical">
 
+                <ProgressBar
+                    android:id="@+id/progress_Explicacion"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="350dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="20dp"
+                    android:indeterminateBehavior="repeat"
+                    android:progressDrawable="@drawable/barra_progreso" />
+
                 <TextView
                     android:id="@+id/text_explicacion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp"
                     android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:text="Var era la única forma de declarar variables en JavaScript. Sin embargo, tiene algunos comportamientos que pueden resultar confusos, como el hoisting (elevación), que puede causar resultados inesperados."

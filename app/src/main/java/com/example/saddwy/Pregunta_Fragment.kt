@@ -159,6 +159,11 @@ class Pregunta_Fragment : Fragment() {
             Log.e("My App", "Could not parse malformed JSON: ")
         }
 
+        val progressBar = view.findViewById<ProgressBar>(R.id.progress_Explicacion)
+        // Establece el valor de progreso
+        var max = 100
+        progressBar.max = max
+        progressBar.progress = 5
     }
 
     suspend fun Cuestion() {

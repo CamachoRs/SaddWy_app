@@ -30,7 +30,7 @@ class Explicacion_Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Obtén una referencia al ProgressBar
-
+        val progressBar = view.findViewById<ProgressBar>(R.id.progress_Explicacion)
         val explanation = arguments?.getString("explanation")
         val textExplicacion = view.findViewById<TextView>(R.id.text_explicacion)
 
@@ -45,6 +45,6 @@ class Explicacion_Fragment : Fragment() {
         }
 
         // Establece el valor de progreso
-
+        progressBar.progress = 10 // Por ejemplo, establece el progreso en 50
     }
 }
